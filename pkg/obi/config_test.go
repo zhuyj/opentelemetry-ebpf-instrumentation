@@ -65,7 +65,7 @@ attributes:
     override: the-host-id
     fetch_timeout: 4s
   select:
-    beyla.network.flow:
+    obi.network.flow:
       include: ["foo", "bar"]
       exclude: ["baz", "bae"]
   extra_group_attributes:
@@ -329,7 +329,7 @@ attributes:
   kubernetes:
     enable: true
   select:
-    beyla_network_flow_bytes:
+    obi_network_flow_bytes:
       include:
         - k8s.src.name
         - k8s.dst.name

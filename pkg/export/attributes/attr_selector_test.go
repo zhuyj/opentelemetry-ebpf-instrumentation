@@ -11,13 +11,13 @@ import (
 
 func TestNormalize(t *testing.T) {
 	incl := Selection{
-		"beyla_network_flow_bytes": InclusionLists{Include: []string{"foo", "bar"}},
+		"obi_network_flow_bytes": InclusionLists{Include: []string{"foo", "bar"}},
 		"some.other.metric_sum":    InclusionLists{Include: []string{"attr", "other"}},
 		"tralari.tralara.total":    InclusionLists{Include: []string{"a1", "a2", "a3"}},
 	}
 	incl.Normalize()
 	assert.Equal(t, Selection{
-		"beyla.network.flow": InclusionLists{Include: []string{"foo", "bar"}},
+		"obi.network.flow": InclusionLists{Include: []string{"foo", "bar"}},
 		"some.other.metric":  InclusionLists{Include: []string{"attr", "other"}},
 		"tralari.tralara":    InclusionLists{Include: []string{"a1", "a2", "a3"}},
 	}, incl)
@@ -26,19 +26,19 @@ func TestNormalize(t *testing.T) {
 func TestFor(t *testing.T) {
 	p, err := NewAttrSelector(GroupKubernetes, &SelectorConfig{
 		SelectionCfg: Selection{
-			"beyla_network_flow_bytes_total": InclusionLists{
-				Include: []string{"beyla_ip", "src.*", "k8s.*"},
+			"obi_network_flow_bytes_total": InclusionLists{
+				Include: []string{"obi_ip", "src.*", "k8s.*"},
 				Exclude: []string{"k8s_*_name", "k8s.*.type", "*zone"},
 			},
 		},
 	})
 	require.NoError(t, err)
 	assert.Equal(t, []attr.Name{
-		"beyla.ip",
 		"k8s.dst.namespace",
 		"k8s.dst.node.ip",
 		"k8s.src.namespace",
 		"k8s.src.node.ip",
+		"obi.ip",
 		"src.address",
 		"src.name",
 		"src.port",
@@ -50,12 +50,12 @@ func TestFor_GlobEntries(t *testing.T) {
 	p, err := NewAttrSelector(GroupKubernetes, &SelectorConfig{
 		SelectionCfg: Selection{
 			"*": InclusionLists{
-				Include: []string{"beyla_ip"},
+				Include: []string{"obi_ip"},
 				// won't be excluded from the final snapshot because they are
 				// re-included in the next inclusion list
 				Exclude: []string{"k8s_*_type"},
 			},
-			"beyla_network_flow_bytes_total": InclusionLists{
+			"obi_network_flow_bytes_total": InclusionLists{
 				Include: []string{"src.*", "k8s.*"},
 				Exclude: []string{"k8s.*.name", "*zone"},
 			},
@@ -63,7 +63,6 @@ func TestFor_GlobEntries(t *testing.T) {
 	})
 	require.NoError(t, err)
 	assert.Equal(t, []attr.Name{
-		"beyla.ip",
 		"k8s.dst.namespace",
 		"k8s.dst.node.ip",
 		"k8s.dst.owner.type",
@@ -72,6 +71,7 @@ func TestFor_GlobEntries(t *testing.T) {
 		"k8s.src.node.ip",
 		"k8s.src.owner.type",
 		"k8s.src.type",
+		"obi.ip",
 		"src.address",
 		"src.name",
 		"src.port",
@@ -85,7 +85,7 @@ func TestFor_GlobEntries_NoInclusion(t *testing.T) {
 			"*": InclusionLists{
 				Exclude: []string{"*dst*"},
 			},
-			"beyla_network_flow_bytes_total": InclusionLists{
+			"obi_network_flow_bytes_total": InclusionLists{
 				Exclude: []string{"k8s.*.namespace", "*zone"},
 			},
 		},
@@ -107,19 +107,19 @@ func TestFor_GlobEntries_Order(t *testing.T) {
 			"*": InclusionLists{
 				Include: []string{"*"},
 			},
-			"beyla_network_*": InclusionLists{
+			"obi_network_*": InclusionLists{
 				Exclude: []string{"dst.*", "transport", "*direction", "iface", "*zone"},
 			},
-			"beyla_network_flow_bytes_total": InclusionLists{
+			"obi_network_flow_bytes_total": InclusionLists{
 				Include: []string{"dst.name"},
 			},
 		},
 	})
 	require.NoError(t, err)
 	assert.Equal(t, []attr.Name{
-		"beyla.ip",
 		"client.port",
 		"dst.name",
+		"obi.ip",
 		"server.port",
 		"src.address",
 		"src.name",
@@ -152,15 +152,15 @@ func TestFor_GlobEntries_Order_Default(t *testing.T) {
 func TestFor_KubeDisabled(t *testing.T) {
 	p, err := NewAttrSelector(0, &SelectorConfig{
 		SelectionCfg: Selection{
-			"beyla_network_flow_bytes_total": InclusionLists{
-				Include: []string{"target.instance", "beyla_ip", "src.*", "k8s.*"},
+			"obi_network_flow_bytes_total": InclusionLists{
+				Include: []string{"target.instance", "obi_ip", "src.*", "k8s.*"},
 				Exclude: []string{"src.port", "*zone"},
 			},
 		},
 	})
 	require.NoError(t, err)
 	assert.Equal(t, []attr.Name{
-		"beyla.ip",
+		"obi.ip",
 		"src.address",
 		"src.name",
 	}, p.For(BeylaNetworkFlow))
@@ -230,7 +230,7 @@ func TestTraces(t *testing.T) {
 	p, err := NewAttrSelector(GroupTraces, &SelectorConfig{
 		SelectionCfg: Selection{
 			"traces": InclusionLists{
-				Include: []string{"db.query.text", "beyla_ip", "src.*", "k8s.*"},
+				Include: []string{"db.query.text", "obi_ip", "src.*", "k8s.*"},
 			},
 		},
 	})

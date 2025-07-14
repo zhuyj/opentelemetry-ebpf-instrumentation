@@ -71,7 +71,7 @@ const (
 
 // Beyla-specific network attributes
 const (
-	BeylaIP    = Name("beyla.ip")
+	OBIIP      = Name("obi.ip")
 	Transport  = Name("transport")
 	SrcAddress = Name("src.address")
 	DstAddres  = Name("dst.address")
