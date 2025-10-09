@@ -20,7 +20,6 @@ import (
 	"go.opentelemetry.io/obi/pkg/components/imetrics"
 	"go.opentelemetry.io/obi/pkg/components/kube"
 	"go.opentelemetry.io/obi/pkg/config"
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
 	"go.opentelemetry.io/obi/pkg/export/attributes"
 	attr "go.opentelemetry.io/obi/pkg/export/attributes/names"
 	"go.opentelemetry.io/obi/pkg/export/debug"
@@ -126,7 +125,7 @@ discovery:
 			BatchLength:               100,
 			BatchTimeout:              time.Second,
 			HTTPRequestTimeout:        0,
-			TCBackend:                 tcdefs.TCBackendAuto,
+			TCBackend:                 config.TCBackendAuto,
 			ContextPropagationEnabled: false,
 			ContextPropagation:        config.ContextPropagationDisabled,
 			RedisDBCache: config.RedisDBCacheConfig{

@@ -32,7 +32,7 @@ import (
 
 	"github.com/cilium/ebpf/rlimit"
 
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 	convenience "go.opentelemetry.io/obi/pkg/internal/ebpf/convenience"
 	"go.opentelemetry.io/obi/pkg/internal/ebpf/ringbuf"
 	"go.opentelemetry.io/obi/pkg/internal/ebpf/tcmanager"
@@ -72,7 +72,7 @@ func NewFlowFetcher(
 	sampling, cacheMaxSize int,
 	ingress, egress bool,
 	ifaceManager *tcmanager.InterfaceManager,
-	tcBackend tcdefs.TCBackend,
+	tcBackend config.TCBackend,
 ) (*FlowFetcher, error) {
 	tlog := tlog()
 	if err := rlimit.RemoveMemlock(); err != nil {

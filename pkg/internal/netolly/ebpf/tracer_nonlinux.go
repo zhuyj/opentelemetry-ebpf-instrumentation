@@ -6,7 +6,7 @@
 package ebpf
 
 import (
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 	"go.opentelemetry.io/obi/pkg/internal/ebpf/ringbuf"
 	"go.opentelemetry.io/obi/pkg/internal/ebpf/tcmanager"
 )
@@ -17,7 +17,7 @@ func NewFlowFetcher(
 	_, _ int,
 	_, _ bool,
 	_ *tcmanager.InterfaceManager,
-	_ tcdefs.TCBackend,
+	_ config.TCBackend,
 ) (*FlowFetcher, error) {
 	return nil, nil
 }

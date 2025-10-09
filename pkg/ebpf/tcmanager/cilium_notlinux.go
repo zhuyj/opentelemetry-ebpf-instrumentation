@@ -6,9 +6,9 @@
 package tcmanager
 
 import (
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 )
 
-func EnsureCiliumCompatibility(_ tcdefs.TCBackend) error {
+func EnsureCiliumCompatibility(_ config.TCBackend) error {
 	return nil
 }

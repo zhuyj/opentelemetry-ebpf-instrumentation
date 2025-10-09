@@ -18,7 +18,7 @@ import (
 	"go.opentelemetry.io/obi/pkg/components/exec"
 	"go.opentelemetry.io/obi/pkg/components/svc"
 	ebpfcommon "go.opentelemetry.io/obi/pkg/ebpf/common"
-	tcmanager2 "go.opentelemetry.io/obi/pkg/internal/ebpf/tcmanager"
+	"go.opentelemetry.io/obi/pkg/internal/ebpf/tcmanager"
 	"go.opentelemetry.io/obi/pkg/internal/goexec"
 	"go.opentelemetry.io/obi/pkg/obi"
 	"go.opentelemetry.io/obi/pkg/pipe/msg"
@@ -32,8 +32,8 @@ type Tracer struct {
 	bpfObjects   BpfObjects
 	closers      []io.Closer
 	log          *slog.Logger
-	ifaceManager *tcmanager2.InterfaceManager
-	tcManager    tcmanager2.TCManager
+	ifaceManager *tcmanager.InterfaceManager
+	tcManager    tcmanager.TCManager
 }
 
 func New(cfg *obi.Config) *Tracer {
@@ -136,11 +136,11 @@ func (p *Tracer) startTC(ctx context.Context) {
 		return
 	}
 
-	p.ifaceManager = tcmanager2.NewInterfaceManager()
-	p.tcManager = tcmanager2.NewTCManager(p.cfg.EBPF.TCBackend)
+	p.ifaceManager = tcmanager.NewInterfaceManager()
+	p.tcManager = tcmanager.NewTCManager(p.cfg.EBPF.TCBackend)
 	p.tcManager.SetInterfaceManager(p.ifaceManager)
-	p.tcManager.AddProgram("tc/tc_egress", p.bpfObjects.ObiAppEgress, tcmanager2.AttachmentEgress)
-	p.tcManager.AddProgram("tc/tc_ingress", p.bpfObjects.ObiAppIngress, tcmanager2.AttachmentIngress)
+	p.tcManager.AddProgram("tc/tc_egress", p.bpfObjects.ObiAppEgress, tcmanager.AttachmentEgress)
+	p.tcManager.AddProgram("tc/tc_ingress", p.bpfObjects.ObiAppIngress, tcmanager.AttachmentIngress)
 
 	p.ifaceManager.Start(ctx)
 }

@@ -8,7 +8,7 @@ package tcmanager
 import (
 	"github.com/cilium/ebpf"
 
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 )
 
 type dummyManager struct{}
@@ -28,4 +28,4 @@ func (d *dummyManager) InterfaceName(_ int) (string, bool)                     {
 func (d *dummyManager) SetInterfaceManager(_ *InterfaceManager)                {}
 func (d *dummyManager) Errors() chan error                                     { return nil }
 
-func EnsureCiliumCompatibility(_ tcdefs.TCBackend) error { return nil }
+func EnsureCiliumCompatibility(_ config.TCBackend) error { return nil }

@@ -17,7 +17,7 @@ import (
 	"github.com/vishvananda/netlink"
 	"golang.org/x/sys/unix"
 
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 	"go.opentelemetry.io/obi/pkg/internal/ebpf/tcmanager"
 )
 
@@ -123,22 +123,22 @@ func ciliumTCPriorities() (uint16, uint16) {
 	return minPrio, maxPrio
 }
 
-func normalizeBackend(backend tcdefs.TCBackend) tcdefs.TCBackend {
-	if backend != tcdefs.TCBackendAuto {
+func normalizeBackend(backend config.TCBackend) config.TCBackend {
+	if backend != config.TCBackendAuto {
 		return backend
 	}
 
 	if tcmanager.IsTCXSupported() {
-		return tcdefs.TCBackendTCX
+		return config.TCBackendTCX
 	}
 
-	return tcdefs.TCBackendTC
+	return config.TCBackendTC
 }
 
-func EnsureCiliumCompatibility(backend tcdefs.TCBackend) error {
+func EnsureCiliumCompatibility(backend config.TCBackend) error {
 	// if we are trying to attach to TCX, we will always end up attaching to
 	// the chain head in front of cilium, so we should be good
-	if normalizeBackend(backend) == tcdefs.TCBackendTCX {
+	if normalizeBackend(backend) == config.TCBackendTCX {
 		return nil
 	}
 

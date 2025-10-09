@@ -13,7 +13,7 @@ import (
 	"github.com/cilium/ebpf/asm"
 	"github.com/cilium/ebpf/link"
 
-	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
+	"go.opentelemetry.io/obi/pkg/config"
 )
 
 type AttachmentType uint8
@@ -59,13 +59,13 @@ func newTCManagerAuto() TCManager {
 	return NewNetlinkManager()
 }
 
-func NewTCManager(backend tcdefs.TCBackend) TCManager {
+func NewTCManager(backend config.TCBackend) TCManager {
 	switch backend {
-	case tcdefs.TCBackendTC:
+	case config.TCBackendTC:
 		return NewNetlinkManager()
-	case tcdefs.TCBackendTCX:
+	case config.TCBackendTCX:
 		return NewTCXManager()
-	case tcdefs.TCBackendAuto:
+	case config.TCBackendAuto:
 		return newTCManagerAuto()
 	}
 
