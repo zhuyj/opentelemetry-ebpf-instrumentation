@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"go.opentelemetry.io/obi/pkg/components/ebpf/tcmanager"
+	"go.opentelemetry.io/obi/pkg/ebpf/tcmanager/tcdefs"
 )
 
 type ContextPropagationMode uint8
@@ -65,7 +65,7 @@ type EBPFTracer struct {
 
 	// Select the TC attachment backend: accepted values are 'tc' (netlink),
 	// and 'tcx'
-	TCBackend tcmanager.TCBackend `yaml:"traffic_control_backend" env:"OTEL_EBPF_BPF_TC_BACKEND"`
+	TCBackend tcdefs.TCBackend `yaml:"traffic_control_backend" env:"OTEL_EBPF_BPF_TC_BACKEND"`
 
 	// Disables Beyla black-box context propagation. Used for testing purposes only.
 	DisableBlackBoxCP bool `yaml:"disable_black_box_cp" env:"OTEL_EBPF_BPF_DISABLE_BLACK_BOX_CP"`
