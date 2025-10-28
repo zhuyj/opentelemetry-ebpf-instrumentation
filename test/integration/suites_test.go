@@ -14,6 +14,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	ti "go.opentelemetry.io/obi/pkg/test/integration"
 	"go.opentelemetry.io/obi/test/integration/components/docker"
 )
 
@@ -22,6 +23,10 @@ func TestSuite(t *testing.T) {
 	require.NoError(t, err)
 	compose.Env = append(compose.Env, `OTEL_EBPF_EXECUTABLE_PATH=(pingclient|testserver)`)
 	require.NoError(t, compose.Up())
+
+	// Create config once for all tests
+	config := ti.DefaultOBIConfig()
+
 	t.Run("RED metrics", testREDMetricsHTTP)
 	t.Run("RED JSON RPC metrics", testREDMetricsJSONRPCHTTP)
 	t.Run("HTTP traces", testHTTPTraces)
@@ -30,7 +35,7 @@ func TestSuite(t *testing.T) {
 	t.Run("GRPC traces", testGRPCTraces)
 	t.Run("GRPC RED metrics", testREDMetricsGRPC)
 	t.Run("GRPC TLS RED metrics", testREDMetricsGRPCTLS)
-	t.Run("Internal Prometheus metrics", testInternalPrometheusExport)
+	t.Run("Internal Prometheus metrics", func(t *testing.T) { ti.InternalPrometheusExport(t, config) })
 	t.Run("Exemplars exist", testExemplarsExist)
 	t.Run("Testing Host Info metric", testHostInfo)
 	t.Run("Client RED metrics", testREDMetricsForClientHTTPLibrary)
@@ -90,7 +95,7 @@ func TestSuite_NoDebugInfo(t *testing.T) {
 	t.Run("HTTP traces", testHTTPTraces)
 	t.Run("GRPC traces", testGRPCTraces)
 	t.Run("GRPC RED metrics", testREDMetricsGRPC)
-	t.Run("Internal Prometheus metrics", testInternalPrometheusExport)
+	t.Run("Internal Prometheus metrics", func(t *testing.T) { ti.InternalPrometheusExport(t, ti.DefaultOBIConfig()) })
 
 	require.NoError(t, compose.Close())
 }
@@ -106,7 +111,7 @@ func TestSuite_StaticCompilation(t *testing.T) {
 	t.Run("HTTP traces", testHTTPTraces)
 	t.Run("GRPC traces", testGRPCTraces)
 	t.Run("GRPC RED metrics", testREDMetricsGRPC)
-	t.Run("Internal Prometheus metrics", testInternalPrometheusExport)
+	t.Run("Internal Prometheus metrics", func(t *testing.T) { ti.InternalPrometheusExport(t, ti.DefaultOBIConfig()) })
 
 	require.NoError(t, compose.Close())
 }
@@ -122,7 +127,7 @@ func TestSuite_OldestGoVersion(t *testing.T) {
 	t.Run("GRPC traces", testGRPCTraces)
 	t.Run("GRPC RED metrics", testREDMetricsGRPC)
 	t.Run("HTTP traces (manual spans)", testHTTPTracesNestedManualSpans)
-	t.Run("Internal Prometheus metrics", testInternalPrometheusExport)
+	t.Run("Internal Prometheus metrics", func(t *testing.T) { ti.InternalPrometheusExport(t, ti.DefaultOBIConfig()) })
 
 	require.NoError(t, compose.Close())
 }
@@ -193,7 +198,7 @@ func TestSuite_PrometheusScrape(t *testing.T) {
 	require.NoError(t, compose.Up())
 	t.Run("RED metrics", testREDMetricsHTTP)
 	t.Run("GRPC RED metrics", testREDMetricsGRPC)
-	t.Run("Internal Prometheus metrics", testInternalPrometheusExport)
+	t.Run("Internal Prometheus metrics", func(t *testing.T) { ti.InternalPrometheusExport(t, ti.DefaultOBIConfig()) })
 	t.Run("Testing OBI Build Info metric", testPrometheusOBIBuildInfo)
 	t.Run("Testing for no OBI self metrics", testPrometheusNoOBIEvents)
 	t.Run("Testing BPF metrics", testPrometheusBPFMetrics)

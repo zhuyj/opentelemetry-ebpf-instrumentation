@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"go.opentelemetry.io/obi/test/integration/components/prom"
+	ti "go.opentelemetry.io/obi/pkg/test/integration"
 )
 
 // does a smoke test to verify that all the components that started
@@ -32,7 +33,7 @@ func testREDMetricsForElixirHTTPLibrary(t *testing.T, url string, comm string) {
 	// - process multiple calls in a row with, one more than we might need
 	// - returning a 200 code
 	for i := 0; i < 4; i++ {
-		doHTTPGet(t, fmt.Sprintf("%s%s/%d", url, path, i), 200)
+		ti.DoHTTPGet(t, fmt.Sprintf("%s%s/%d", url, path, i), 200)
 	}
 
 	// Eventually, Prometheus would make this query visible
