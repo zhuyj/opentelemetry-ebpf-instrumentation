@@ -28,7 +28,7 @@ services:
 #    ports:
 #      - "{{ .LokiHTTPPort }}:3100"
   collector:
-    image: otel/opentelemetry-collector-contrib:0.103.0@sha256:0dffde3e58fc3f255cad861deb62d7c51505ce961a8a7e2107c7fc2668b774a3
+    image: otel/opentelemetry-collector-contrib:0.139.0@sha256:faf125d656fa47cea568b2f3b4494efd2525083bc75c1e96038bc23f05cd68fd
     volumes:
       - "{{ .ConfigDir }}/otelcol-config.yaml:/config.yaml"
     command:
